@@ -14,6 +14,8 @@ export const CursorTrail = () => {
   const particles = useRef<Particle[]>([]);
   const mousePos = useRef({ x: 0, y: 0 });
   const animationFrameId = useRef<number>();
+  const isTouchInput = useRef<boolean>(false);
+  const maxParticles = useRef<number>(100);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,11 +32,20 @@ export const CursorTrail = () => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
+    // Detect input type (touch vs mouse)
+    const detectInputType = () => {
+      const supportsTouch =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
+      isTouchInput.current = supportsTouch;
+      // Lower particle count on touch devices for performance
+      maxParticles.current = supportsTouch ? 60 : 100;
+    };
+    detectInputType();
+
     // Track mouse position
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
-      
-      // Create new particles
+
       for (let i = 0; i < 2; i++) {
         particles.current.push({
           x: e.clientX,
@@ -46,13 +57,49 @@ export const CursorTrail = () => {
         });
       }
 
-      // Limit particle count
-      if (particles.current.length > 100) {
-        particles.current = particles.current.slice(-100);
+      if (particles.current.length > maxParticles.current) {
+        particles.current = particles.current.slice(-maxParticles.current);
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    // Track touch position
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const touch = e.touches[0];
+      mousePos.current = { x: touch.clientX, y: touch.clientY };
+
+      // Slightly fewer particles per move for mobile
+      const particlesToAdd = 1;
+      for (let i = 0; i < particlesToAdd; i++) {
+        particles.current.push({
+          x: touch.clientX,
+          y: touch.clientY,
+          size: Math.random() * 2 + 1,
+          opacity: 1,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+        });
+      }
+
+      if (particles.current.length > maxParticles.current) {
+        particles.current = particles.current.slice(-maxParticles.current);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const touch = e.touches[0];
+      mousePos.current = { x: touch.clientX, y: touch.clientY };
+    };
+
+    const handleTouchEnd = () => {
+      // Optionally fade out trail naturally; no action required
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     // Animation loop
     const animate = () => {
@@ -121,7 +168,10 @@ export const CursorTrail = () => {
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove as any);
+      window.removeEventListener("touchstart", handleTouchStart as any);
+      window.removeEventListener("touchmove", handleTouchMove as any);
+      window.removeEventListener("touchend", handleTouchEnd as any);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }

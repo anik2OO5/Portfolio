@@ -1,10 +1,10 @@
 import { Mail, Github, Linkedin, Instagram, Twitter } from "lucide-react";
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com/", label: "GitHub", color: "hover:text-white" },
-  { icon: Linkedin, href: "https://linkedin.com/in/", label: "LinkedIn", color: "hover:text-blue-400" },
-  { icon: Instagram, href: "https://instagram.com/", label: "Instagram", color: "hover:text-pink-400" },
-  { icon: Twitter, href: "https://x.com/", label: "Twitter", color: "hover:text-blue-300" },
+  { icon: Github, href: "https://github.com/anik2OO5", label: "GitHub", color: "hover:text-white" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/anik-bhaumik-a4782a232/", label: "LinkedIn", color: "hover:text-blue-400" },
+  { icon: Instagram, href: "https://www.instagram.com/anik.bhaumik/", label: "Instagram", color: "hover:text-pink-400" },
+  { icon: Twitter, href: "https://x.com/anikbhaumik2005", label: "Twitter", color: "hover:text-blue-300" },
 ];
 
 export const ContactSection = () => {

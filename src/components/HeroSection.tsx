@@ -20,7 +20,7 @@ export const HeroSection = () => {
           
           <div className="flex gap-4 justify-center flex-wrap">
             <a
-              href="#about"
+              href="#projects"
               className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:shadow-[0_0_30px_rgba(0,255,255,0.5)] transition-all duration-300 hover:scale-105"
             >
               Explore My Work

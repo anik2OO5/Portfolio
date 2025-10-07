@@ -50,7 +50,7 @@ export const CursorTrail = () => {
         particles.current.push({
           x: e.clientX,
           y: e.clientY,
-          size: Math.random() * 3 + 1,
+          size: Math.random() * 4 + 1,
           opacity: 1,
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
@@ -69,15 +69,15 @@ export const CursorTrail = () => {
       mousePos.current = { x: touch.clientX, y: touch.clientY };
 
       // Slightly fewer particles per move for mobile
-      const particlesToAdd = 1;
+      const particlesToAdd = 2;
       for (let i = 0; i < particlesToAdd; i++) {
         particles.current.push({
           x: touch.clientX,
           y: touch.clientY,
-          size: Math.random() * 2 + 1,
+          size: Math.random() * 4 + 1,
           opacity: 1,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
         });
       }
 
